@@ -66,6 +66,15 @@ app.get('/api/posters', async (req, res) => {
 	res.json(posters)
 });
 
+app.get('/api/poster/:movieName', async (req, res) => {
+	const movieName = req.params.movieName;
+
+	let imagePath = path.join(DIRECTORY, "/", movieName, "/poster.jpg")
+	res.sendFile(imagePath);
+});
+
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
+
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
 });
