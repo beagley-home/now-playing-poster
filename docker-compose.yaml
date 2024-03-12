@@ -9,6 +9,6 @@ services:
       - 8080:8080
     volumes:
       - ./app:/var/app
-      - ${DIRECTORY}:/mnt/directory
+      - ${DIRECTORY}:${DIRECTORY}
     env_file:
       .env

@@ -7,7 +7,7 @@ const { parseString, parseStringPromise } = require('xml2js');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const DIRECTORY = '/mnt/directory'; // as defined in docker-compose, if not using docker-compose, another method of mounting will be required
+const DIRECTORY = process.env.DIRECTORY; 
 const EXCLUDE_LIST = process.env.EXCLUDE_LIST || "";
 
 app.use(express.json());
@@ -57,14 +57,13 @@ async function getPosters(directory) {
 
 }
 
-app.get('/', async (req, res) => {
+app.get('/api/posters', async (req, res) => {
 	//reset movie object to empty for processing
 	posters = []
 
 	await getPosters(DIRECTORY)
 
-	console.log(posters)
-	res.send('Welcome to my  API!');
+	res.json(posters)
 });
 
 app.listen(PORT, () => {
