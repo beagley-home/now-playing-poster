@@ -1,7 +1,6 @@
 <template>
-	<div class="hello">
-		<h1>Now Playing</h1>
-		<img :src="poster_url" alt="Current Poster">
+	<div>
+		<img width="2160px" :src="poster_url" alt="Current Poster">
 	</div>
 
 </template>
@@ -91,12 +90,19 @@ export default {
 
 		},
 		posters_to_display: function () {
-			if (this.top_released.length > 0 || this.top_added.length > 0) {
-				return this.top_added.concat(this.top_released)
-			} else {
-				return []
+			let display = []
+
+			if (this.top_released.length > 0) {
+				display = this.top_released
 
 			}
+
+			if (this.top_added.length > 0) {
+				display.push.apply(display, this.top_added)
+
+			}
+
+			return display
 
 		}
 	},
@@ -110,34 +116,13 @@ export default {
 		// rotate movie every 30 seconds
 		this.interval = setInterval(async () => {
 			actual_this.current_movie = await actual_this.getRandomMovie()
-		}, actual_this.rotate_movie_seconds); // 30 seconds in milliseconds
+		}, actual_this.rotate_movie_seconds);
 
 		// get new movies
 		this.interval = setInterval(async () => {
 			await actual_this.fetchData()
-		}, actual_this.get_new_movies_seconds); // 30 seconds in milliseconds
+		}, actual_this.get_new_movies_seconds);
 
 	}
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-	margin: 40px 0 0;
-}
-
-ul {
-	list-style-type: none;
-	padding: 0;
-}
-
-li {
-	display: inline-block;
-	margin: 0 10px;
-}
-
-a {
-	color: #42b983;
-}
-</style>

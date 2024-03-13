@@ -35,7 +35,7 @@ async function getPosters(directory) {
 						let m = {
 							"title": movie,
 							"image": posterPath,
-							"added": stats.mtime,
+							"added": stats.ctimeMs,
 							"released": year[1]
 						}
 
