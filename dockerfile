@@ -21,8 +21,8 @@ FROM node:latest AS release
 
 WORKDIR /var/app
 
-COPY --from=app_builder /var/app/ ./
 COPY ./app .
+COPY --from=app_builder /var/app/node_modules ./node_modules
 COPY --from=frontend_builder /var/app/frontend/dist/ ./frontend
 
 CMD npm run start
