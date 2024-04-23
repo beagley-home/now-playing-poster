@@ -15,3 +15,11 @@ export default {
 }
 </script>
 
+<style>
+#app {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Full viewport height */
+}
+</style>
