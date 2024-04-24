@@ -1,0 +1,19 @@
+FROM node:20.12.2-alpine3.18 AS builder
+
+ARG VUE_APP_API_HOST
+
+WORKDIR /var/app/
+
+COPY ./src .
+
+#create environment file
+RUN echo "VUE_APP_API_HOST=${VUE_APP_API_HOST}" > /var/app/.env
+
+RUN npm i && npm run build
+
+FROM nginx:1.25.5-alpine AS release
+
+WORKDIR /var/app
+
+COPY image/ /
+COPY --from=builder /var/app/dist ./

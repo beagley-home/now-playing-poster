@@ -21,7 +21,7 @@ export default {
 	methods: {
 		async fetchData() {
 			try {
-				const response = await fetch('/api/posters'); // Replace this URL with your API endpoint
+				const response = await fetch(`${process.env.VUE_APP_API_HOST}/api/posters`); // Replace this URL with your API endpoint
 				if (!response.ok) {
 					throw new Error('Failed to fetch data');
 				}
@@ -53,7 +53,7 @@ export default {
 	},
 	watch: {
 		current_movie: function (movie) {
-			this.poster_url = `/api/poster/${movie.title}`
+			this.poster_url = `${process.env.VUE_APP_API_HOST}/api/poster/${movie.title}`
 
 		}
 

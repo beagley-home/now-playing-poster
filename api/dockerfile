@@ -1,0 +1,17 @@
+FROM node:20.12.2-alpine3.18 AS builder
+
+WORKDIR /var/app
+
+COPY ./src/package.json .
+COPY ./src/package-lock.json* .
+
+RUN npm i
+
+FROM node:20.12.2-alpine3.18 AS release
+
+WORKDIR /var/app
+
+COPY ./src .
+COPY --from=builder /var/app/node_modules ./node_modules
+
+CMD npm run start

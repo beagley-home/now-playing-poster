@@ -3,10 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const { exitCode } = require('process');
 const { parseString, parseStringPromise } = require('xml2js');
+const cors = require('cors');
 
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = 80;
 const DIRECTORY = process.env.DIRECTORY; 
 const EXCLUDE_LIST = process.env.EXCLUDE_LIST || "";
 
@@ -56,6 +57,8 @@ async function getPosters(directory) {
 	}
 
 }
+
+app.use(cors());
 
 app.get('/api/posters', async (req, res) => {
 	//reset movie object to empty for processing
