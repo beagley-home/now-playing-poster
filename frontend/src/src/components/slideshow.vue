@@ -38,12 +38,32 @@ export default {
 			}
 		},
 		async getRandomMovie() {
-			if (this.posters_to_display.length > 0) {
-				let rand = Math.floor(Math.random() * this.posters_to_display.length);
+			if (this.posters.length > 0) {
+				//get scores for each movie
+				let scores = this.posters.map(movie => movie.score);
 
-				let movie = this.posters_to_display[rand]
+				//sum all ranks
+				let totalScore = scores.reduce((a, b) => a + b, 0);
 
-				return movie
+				console.log(totalScore);
+				//get threshold of a random number between 0 and totalScore
+				let threshold = Math.random() * totalScore;
+
+				console.log(threshold);
+
+				let cumulativeScore = 0;
+
+				for (let i = 0; i < this.posters.length; i++) {
+					cumulativeScore += scores[i];
+
+					if(cumulativeScore >= threshold) {
+						return this.posters[i]
+
+					}
+
+				}
+
+				return null;
 
 			} else {
 				console.error('no images found')
@@ -57,54 +77,6 @@ export default {
 
 		}
 
-	},
-	computed: {
-		top_released: function () {
-			if (this.posters.length > 0) {
-				let temp = this.posters
-				let sorted = temp.sort((a, b) => {
-					return parseInt(b.released) - parseInt(a.released);
-
-				})
-
-				return sorted.slice(0, this.number_of_items)
-			} else {
-				return []
-
-			}
-
-		},
-		top_added: function () {
-			if (this.posters.length > 0) {
-				let temp = this.posters
-				let sorted = temp.sort((a, b) => {
-					return b.added - a.added;
-
-				})
-
-				return sorted.slice(0, this.number_of_items)
-			} else {
-				return []
-
-			}
-
-		},
-		posters_to_display: function () {
-			let display = []
-
-			if (this.top_released.length > 0) {
-				display = this.top_released
-
-			}
-
-			if (this.top_added.length > 0) {
-				display.push.apply(display, this.top_added)
-
-			}
-
-			return display
-
-		}
 	},
 	mounted: async function () {
 		let actual_this = this
