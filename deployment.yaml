@@ -57,9 +57,9 @@ spec:
         - name: EXCLUDE_LIST
           value: ".deletedByTMM,test"
         - name: RECENTLY_ADDED_WEIGHT
-          value: "5"
+          value: "20"
         - name: RECENTLY_RELEASED_WEIGHT
-          value: "10"
+          value: "40"
         - name: YEARS_TO_CONSIDER_NEWLY_RELEASED
           value: "2"
         livenessProbe:  # livenessProbe: Checks if the container is running; restarts on failure. This checks if container's services are still running successfully, will restart if not
