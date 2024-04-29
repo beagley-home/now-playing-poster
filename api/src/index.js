@@ -10,6 +10,9 @@ const app = express();
 const PORT = 80;
 const DIRECTORY = process.env.DIRECTORY; 
 const EXCLUDE_LIST = process.env.EXCLUDE_LIST || "";
+const RECENTLY_ADDED_WEIGHT = process.env.RECENTLY_ADDED_WEIGHT || 10;
+const RECENTLY_RELEASED_WEIGHT = process.env.RECENTLY_RELEASED_WEIGHT || 5;
+const YEARS_TO_CONSIDER_NEWLY_RELEASED  = process.env.YEARS_TO_CONSIDER_NEWLY_RELEASED || 2;
 
 app.use(express.json());
 
@@ -18,6 +21,8 @@ let posters = []
 async function getPosters(directory) {
 	try {
 		let movies = fs.readdirSync(directory)
+		let currentTime = Date.now()
+		let currentYear = new Date().getFullYear();
 
 		for (const movie of movies) {
 			let moviePath = path.join(directory, movie)
@@ -37,7 +42,26 @@ async function getPosters(directory) {
 							"title": movie,
 							"image": posterPath,
 							"added": stats.ctimeMs,
-							"released": year[1]
+							"released": year[1],
+							"score": 1,
+							"recently_added": false,
+							"recently_released": false
+						}
+
+						// rank movie
+						let timeSinceAdded = currentTime - m.added
+						let releasedYear = parseInt(m.released)
+
+						// Increase score if recently added (less than 30 days)
+						if (timeSinceAdded < 30 * 24 * 60 * 60 * 1000) {
+							m.score += parseInt(RECENTLY_ADDED_WEIGHT);
+							m.recently_added = true
+						}
+
+						// Increase score if recently released 
+						if (currentYear - releasedYear < YEARS_TO_CONSIDER_NEWLY_RELEASED) {
+							m.score += parseInt(RECENTLY_RELEASED_WEIGHT);
+							m.recently_released = true
 						}
 
 						posters.push(m)
