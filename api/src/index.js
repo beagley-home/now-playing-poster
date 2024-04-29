@@ -84,6 +84,10 @@ async function getPosters(directory) {
 
 app.use(cors());
 
+app.get('/', async (req, res) => {
+	res.json({status: "What door?"})
+});
+
 app.get('/api/posters', async (req, res) => {
 	//reset movie object to empty for processing
 	posters = []
