@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: now-playing-api
+  namespace: intranet
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: now-playing-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: now-playing-api
+  namespace: intranet
+  labels:
+    app: now-playing-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+     app: now-playing-api
+  template:
+    metadata:
+      labels:
+        app: now-playing-api
+    spec:
+      # Node Affinity to attract this Deployment's pods to a specific set of worker nodes
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname # Replace this with corresponding worker node label's key
+                operator: In
+                values:
+                - k3s-node-1 # Replace this with corresponding worker node label's value
+      containers:
+      - name: now-playing-api
+        image: container.registry:5000/now-playing-api:${IMAGE_TAG}
+        ports:
+          - containerPort: 8080
+        livenessProbe:  # livenessProbe: Checks if the container is running; restarts on failure. This checks if container's services are still running successfully, will restart if not
+          httpGet:
+            path: /
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe: # readinessProbe: Determines if the container is ready to serve traffic. AKA, this wont be registered with the service until successful
+          httpGet:
+            path: /
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        startupProbe: # startupProbe: Verifies the application has started up correctly before other probes are activated. No other checks run till this succeeds
+          httpGet:
+            path: /
+          failureThreshold: 30
+          periodSeconds: 10
