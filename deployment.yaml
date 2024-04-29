@@ -39,15 +39,18 @@ spec:
                 operator: In
                 values:
                 - k3s-node-1 # Replace this with corresponding worker node label's value
+      volumes:
+        - name: posters
+          hostPath:
+            path: /mnt/the_hive/media/Movies
       containers:
       - name: now-playing-api
         image: cr.local.home.jeffbeagley.com/now-playing-api:${IMAGE_TAG}
         ports:
           - containerPort: 80
-        volumes:
+        volumeMounts:
           - name: posters
-            hostPath:
-              path: /mnt/the_hive/media/Movies
+            mountPath: /mnt/the_hive/media/Movies
         env:
         - name: DIRECTORY
           value: "/mnt/the_hive/media/Movies"
