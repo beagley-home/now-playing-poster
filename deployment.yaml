@@ -7,7 +7,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
   type: LoadBalancer
   selector:
     app: now-playing-api
@@ -43,7 +43,7 @@ spec:
       - name: now-playing-api
         image: cr.local.home.jeffbeagley.com/now-playing-api:${IMAGE_TAG}
         ports:
-          - containerPort: 8080
+          - containerPort: 80
         env:
         - name: DIRECTORY
           value: "/mnt/the_hive/media/Movies"
@@ -58,15 +58,18 @@ spec:
         livenessProbe:  # livenessProbe: Checks if the container is running; restarts on failure. This checks if container's services are still running successfully, will restart if not
           httpGet:
             path: /
+            port: 80
           initialDelaySeconds: 60
           periodSeconds: 10
         readinessProbe: # readinessProbe: Determines if the container is ready to serve traffic. AKA, this wont be registered with the service until successful
           httpGet:
             path: /
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
         startupProbe: # startupProbe: Verifies the application has started up correctly before other probes are activated. No other checks run till this succeeds
           httpGet:
             path: /
+            port: 80
           failureThreshold: 30
           periodSeconds: 10
