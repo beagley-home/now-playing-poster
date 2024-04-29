@@ -41,7 +41,7 @@ spec:
                 - k3s-node-1 # Replace this with corresponding worker node label's value
       containers:
       - name: now-playing-api
-        image: container.registry:5000/now-playing-api:${IMAGE_TAG}
+        image: cr.local.home.jeffbeagley.com/now-playing-api:${IMAGE_TAG}
         ports:
           - containerPort: 8080
         livenessProbe:  # livenessProbe: Checks if the container is running; restarts on failure. This checks if container's services are still running successfully, will restart if not
