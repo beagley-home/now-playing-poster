@@ -44,6 +44,10 @@ spec:
         image: cr.local.home.jeffbeagley.com/now-playing-api:${IMAGE_TAG}
         ports:
           - containerPort: 80
+        volumes:
+          - name: posters
+            hostPath:
+              path: /mnt/the_hive/media/Movies
         env:
         - name: DIRECTORY
           value: "/mnt/the_hive/media/Movies"
